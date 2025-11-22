@@ -1,0 +1,67 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://api.example.com/raw",
+        "responseFormat": "json"
+      },
+      "name": "Fetch API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return $items.map(item => ({ json: { id: item.json.id, name: item.json.full_name } }));"
+      },
+      "name": "Transform JSON",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://yourapi.com/submit",
+        "method": "POST",
+        "sendBody": true
+      },
+      "name": "Forward API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Fetch API": {
+      "main": [
+        [
+          {
+            "node": "Transform JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform JSON": {
+      "main": [
+        [
+          {
+            "node": "Forward API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
